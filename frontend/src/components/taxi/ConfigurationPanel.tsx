@@ -27,14 +27,14 @@ export function ConfigurationPanel({
   const maxObstacles = gridSize === 3 ? 2 : 3;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="space-y-3">
       {/* Environment Config */}
       <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium">Environment</CardTitle>
+        <CardHeader className="pb-1 py-2">
+          <CardTitle className="text-xs font-medium">Environment</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
+        <CardContent className="space-y-2 py-2">
+          <div className="space-y-1">
             <Label className="text-xs text-muted-foreground">Grid Size</Label>
             <RadioGroup
               value={String(gridSize)}
@@ -57,7 +57,7 @@ export function ConfigurationPanel({
             <Label className="text-xs text-muted-foreground">
               Obstacles (click grid to toggle)
             </Label>
-            <p className="text-sm font-medium">
+            <p className="text-xs font-medium">
               {obstacleCount} / {maxObstacles} max
             </p>
           </div>
@@ -66,6 +66,7 @@ export function ConfigurationPanel({
             onClick={onInitialize}
             disabled={initialized}
             className="w-full"
+            size="sm"
           >
             🔄 Initialize
           </Button>
@@ -80,20 +81,20 @@ export function ConfigurationPanel({
 
       {/* Agent Parameters */}
       <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium">Agent Parameters</CardTitle>
+        <CardHeader className="pb-1 py-2">
+          <CardTitle className="text-xs font-medium">Agent Parameters</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-2 py-2">
           {/* Gamma */}
-          <div className="space-y-2">
+          <div className="space-y-1">
             <div className="flex justify-between">
               <Label className="text-xs text-muted-foreground">
-                Gamma (γ) - Discount Factor
+                Gamma (γ)
               </Label>
-              <span className="text-xs font-mono">{agentParams.gamma.toFixed(2)}</span>
+              <span className="text-xs font-mono">{agentParams.gamma?.toFixed(2) ?? '0.00'}</span>
             </div>
             <Slider
-              value={[agentParams.gamma]}
+              value={[agentParams.gamma ?? 0.9]}
               onValueChange={([v]) => onAgentParamsChange({ gamma: v })}
               min={0}
               max={1}
@@ -102,15 +103,15 @@ export function ConfigurationPanel({
           </div>
 
           {/* Alpha */}
-          <div className="space-y-2">
+          <div className="space-y-1">
             <div className="flex justify-between">
               <Label className="text-xs text-muted-foreground">
-                Alpha (α) - Learning Rate
+                Alpha (α)
               </Label>
-              <span className="text-xs font-mono">{agentParams.alpha.toFixed(2)}</span>
+              <span className="text-xs font-mono">{agentParams.alpha?.toFixed(2) ?? '0.00'}</span>
             </div>
             <Slider
-              value={[agentParams.alpha]}
+              value={[agentParams.alpha ?? 0.1]}
               onValueChange={([v]) => onAgentParamsChange({ alpha: v })}
               min={0}
               max={1}
@@ -119,25 +120,21 @@ export function ConfigurationPanel({
           </div>
 
           {/* Epsilon */}
-          <div className="space-y-2">
+          <div className="space-y-1">
             <div className="flex justify-between">
               <Label className="text-xs text-muted-foreground">
-                Epsilon (ε) - Exploration
+                Epsilon (ε)
               </Label>
-              <span className="text-xs font-mono">{agentParams.epsilon.toFixed(2)}</span>
+              <span className="text-xs font-mono">{agentParams.epsilon?.toFixed(2) ?? '0.00'}</span>
             </div>
             <Slider
-              value={[agentParams.epsilon]}
+              value={[agentParams.epsilon ?? 0.1]}
               onValueChange={([v]) => onAgentParamsChange({ epsilon: v })}
               min={0}
               max={1}
               step={0.01}
             />
           </div>
-
-          <Button variant="secondary" className="w-full">
-            💾 Apply
-          </Button>
         </CardContent>
       </Card>
     </div>

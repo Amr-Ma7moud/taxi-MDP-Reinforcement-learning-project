@@ -17,28 +17,23 @@ class Agent:
     
     Uses Q-Learning algorithm to learn optimal actions for each state.
     """
-    
-    # Available actions (must match Environment)
+
     ACTIONS = ['NORTH', 'SOUTH', 'EAST', 'WEST', 'PICK', 'DROP']
     
-    def __init__(self, gamma: float = 0.9):
+    def __init__(self, gamma: float = 0.9, alpha: float = 0.1, epsilon: float = 0.1):
         """
         Create the agent.
         
         Args:
             gamma: Discount factor (0 to 1). Higher = care more about future.
-                   This is configurable from UI.
+                    This is configurable from UI.
         """
-        # The Q-table: stores learned values
-        # Key: (state_tuple, action_string) → Value: float
-        # Example: {((1,2,3,0,0,3,0), 'EAST'): 2.5, ...}
-        self.q_table: Dict[Tuple, float] = {}
         
-        # Learning parameters
-        self.gamma = gamma      # Discount factor (configurable)
-        self.alpha = 0.1        # Learning rate (fixed)
-        self.epsilon = 0.1      # Exploration rate (fixed)
-    
+        self.q_table: Dict[Tuple, float] = {}
+        self.set_gamma(gamma)
+        self.set_alpha(alpha)
+        self.set_epsilon(epsilon)
+
     def get_action(self, state: tuple) -> str:
         """
         Choose an action using epsilon-greedy strategy.
@@ -49,19 +44,17 @@ class Agent:
         
         Args:
             state: Current state tuple from environment
-                   Example: (1, 2, 3, 0, 0, 3, 0)
+                    Example: (1, 2, 3, 0, 0, 3, 0)
         
         Returns:
             str: Action to take ('NORTH', 'SOUTH', etc.)
         """
-        # Generate random number between 0 and 1
-        random_value = random.random()
         
-        # Exploration: pick random action
+        random_value = random.random()
+
         if random_value < self.epsilon:
             return random.choice(self.ACTIONS)
         
-        # Exploitation: pick best known action
         return self._get_best_action(state)
     
     def update(self, state: tuple, action: str, reward: float, next_state: tuple) -> None:
@@ -81,23 +74,17 @@ class Agent:
             reward: Reward received from environment
             next_state: State AFTER action was taken
         """
-        # Step 1: Get old Q-value (what we currently believe)
         old_q = self._get_q_value(state, action)
-        
-        # Step 2: Calculate best future Q-value from next state
         best_future_q = self._get_max_q_value(next_state)
         
         # Step 3: Calculate target (what we now think Q should be)
         # target = immediate reward + discounted future value
         target = reward + self.gamma * best_future_q
         
-        # Step 4: Calculate error (difference between target and old belief)
         error = target - old_q
         
-        # Step 5: Update Q-value (move old_q toward target)
         new_q = old_q + self.alpha * error
         
-        # Step 6: Store in Q-table
         key = (state, action)
         self.q_table[key] = new_q
     
@@ -117,6 +104,8 @@ class Agent:
         """
         if 0 <= gamma <= 1:
             self.gamma = gamma
+        else:
+            self.gamma = 0.9
     
     def set_epsilon(self, epsilon: float) -> None:
         """
@@ -127,6 +116,8 @@ class Agent:
         """
         if 0 <= epsilon <= 1:
             self.epsilon = epsilon
+        else:
+            self.epsilon = 0.1
     
     def set_alpha(self, alpha: float) -> None:
         """
@@ -137,6 +128,8 @@ class Agent:
         """
         if 0 <= alpha <= 1:
             self.alpha = alpha
+        else:
+            self.alpha = 0.1
     
     def get_q_table_size(self) -> int:
         """
@@ -305,105 +298,3 @@ class Agent:
         explanation.append("=" * 50)
         
         return "\n".join(explanation)
-
-if __name__ == "__main__":
-    print("=" * 60)
-    print("AGENT TEST")
-    print("=" * 60)
-    
-    # Create agent
-    agent = Agent(gamma=0.9)
-    
-    print(f"\n1. Initial Parameters:")
-    print(f"   Gamma (discount): {agent.gamma}")
-    print(f"   Alpha (learning rate): {agent.alpha}")
-    print(f"   Epsilon (exploration): {agent.epsilon}")
-    print(f"   Q-table size: {agent.get_q_table_size()}")
-    
-    # Test action selection with empty Q-table
-    print(f"\n2. Action Selection (empty Q-table):")
-    test_state = (1, 2, 3, 0, 0, 3, 0)
-    print(f"   State: {test_state}")
-    
-    actions_chosen = []
-    for i in range(10):
-        action = agent.get_action(test_state)
-        actions_chosen.append(action)
-    print(f"   10 actions chosen: {actions_chosen}")
-    print(f"   (Should be random since Q-table is empty)")
-    
-    # Test learning
-    print(f"\n3. Learning Test:")
-    
-    # Simulate: agent at (1,2), goes EAST to (2,2), gets -1 reward
-    state = (1, 2, 3, 0, 0, 3, 0)
-    action = 'EAST'
-    reward = -1
-    next_state = (2, 2, 3, 0, 0, 3, 0)
-    
-    print(f"   Before update:")
-    print(f"   Q({state}, {action}) = {agent._get_q_value(state, action)}")
-    
-    agent.update(state, action, reward, next_state)
-    
-    print(f"   After update:")
-    print(f"   Q({state}, {action}) = {agent._get_q_value(state, action):.4f}")
-    print(f"   Q-table size: {agent.get_q_table_size()}")
-    
-    # Test multiple updates to same state-action
-    print(f"\n4. Multiple Updates (same state-action):")
-    for i in range(10):
-        agent.update(state, action, reward, next_state)
-    
-    print(f"   After 10 more updates:")
-    print(f"   Q({state}, {action}) = {agent._get_q_value(state, action):.4f}")
-    
-    # Test with positive reward
-    print(f"\n5. Positive Reward Test (dropoff scenario):")
-    
-    drop_state = (3, 3, -1, -1, 3, 3, 1)  # At destination with passenger
-    drop_action = 'DROP'
-    drop_reward = 10
-    drop_next_state = (3, 3, -1, -1, -1, -1, 0)  # After successful drop
-    
-    print(f"   State: At destination (3,3) with passenger")
-    print(f"   Action: DROP")
-    print(f"   Reward: +10")
-    
-    agent.update(drop_state, drop_action, drop_reward, drop_next_state)
-    
-    print(f"   Q(drop_state, DROP) = {agent._get_q_value(drop_state, drop_action):.4f}")
-    
-    # Test Q-values for state
-    print(f"\n6. All Q-values for drop_state:")
-    q_values = agent.get_q_values_for_state(drop_state)
-    for act, val in q_values.items():
-        print(f"   {act}: {val:.4f}")
-    
-    # Test best action selection after learning
-    print(f"\n7. Best Action After Learning:")
-    best = agent._get_best_action(drop_state)
-    print(f"   Best action for drop_state: {best}")
-    print(f"   (Should be DROP since it has highest Q-value)")
-    
-    # Test gamma change
-    print(f"\n8. Parameter Change:")
-    agent.set_gamma(0.5)
-    print(f"   Changed gamma to: {agent.gamma}")
-    
-    # Test reset
-    print(f"\n9. Reset Test:")
-    print(f"   Q-table size before reset: {agent.get_q_table_size()}")
-    agent.reset()
-    print(f"   Q-table size after reset: {agent.get_q_table_size()}")
-    
-    # Test explain decision
-    print(f"\n10. Decision Explanation:")
-    agent.update(test_state, 'EAST', 5, next_state)
-    agent.update(test_state, 'NORTH', -2, (1, 3, 3, 0, 0, 3, 0))
-    agent.update(test_state, 'PICK', -5, test_state)
-    print(agent.explain_decision(test_state))
-    
-    print("\n" + "=" * 60)
-    print("ALL TESTS COMPLETE")
-    print("=" * 60)

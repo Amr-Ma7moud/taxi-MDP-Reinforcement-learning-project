@@ -49,20 +49,20 @@ export function GridVisualization({ gridState, editable, onCellClick }: GridVisu
       </div>
       
       {/* Legend */}
-      <div className="mt-4 flex flex-wrap gap-4 justify-center text-sm text-muted-foreground">
-        <div className="flex items-center gap-1">
+      <div className="mt-3 flex flex-wrap gap-2 justify-center text-xs text-muted-foreground">
+        <div className="flex items-center gap-0.5">
           <span>🚕</span> Taxi
         </div>
-        <div className="flex items-center gap-1">
-          <span>🚖</span> Taxi + Passenger
+        <div className="flex items-center gap-0.5">
+          <span>🚖</span> Taxi+Pass
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5">
           <span>🧑</span> Passenger
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5">
           <span>📍</span> Destination
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5">
           <span>🧱</span> Obstacle
         </div>
       </div>

@@ -42,4 +42,4 @@ export interface LastAction {
 
 export type Action = 'NORTH' | 'SOUTH' | 'EAST' | 'WEST' | 'PICKUP' | 'DROPOFF';
 
-export type ConnectionStatus = 'connected' | 'disconnected' | 'training' | 'idle';
+export type ConnectionStatus = 'connected' | 'disconnected' | 'training' | 'idle' | 'connecting' | 'error';

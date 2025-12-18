@@ -31,21 +31,54 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-6">
+    <div className="min-h-screen bg-background p-2 md:p-4">
       {/* Header */}
-      <header className="mb-6">
-        <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-          Taxi MDP Reinforcement Learning
-        </h1>
-        <p className="text-muted-foreground mt-1">
-          Q-Learning agent learning to pick up and drop off passengers
-        </p>
+      <header className="mb-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-xl md:text-2xl font-bold text-foreground">
+              Taxi MDP Reinforcement Learning
+            </h1>
+            <p className="text-muted-foreground text-sm">
+              Q-Learning agent learning to pick up and drop off passengers
+            </p>
+          </div>
+          
+          {/* Connection Status */}
+          <div className="flex items-center gap-2 text-sm">
+            <div className={`w-3 h-3 rounded-full ${
+              connectionStatus === 'connected' ? 'bg-green-500' :
+              connectionStatus === 'connecting' ? 'bg-yellow-500' :
+              connectionStatus === 'training' ? 'bg-blue-500' :
+              connectionStatus === 'idle' ? 'bg-green-400' :
+              'bg-red-500'
+            }`} />
+            <span className="capitalize text-muted-foreground">
+              {connectionStatus === 'connected' ? 'Connected' :
+               connectionStatus === 'connecting' ? 'Connecting...' :
+               connectionStatus === 'training' ? 'Training' :
+               connectionStatus === 'idle' ? 'Ready' :
+               connectionStatus === 'error' ? 'Error' :
+               'Disconnected'}
+            </span>
+          </div>
+        </div>
       </header>
 
+      {/* Connection Error Alert */}
+      {(connectionStatus === 'disconnected' || connectionStatus === 'error') && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
+          <h3 className="text-red-800 font-medium text-sm">Backend Server Not Available</h3>
+          <p className="text-red-600 text-xs mt-1">
+            Please start: <code className="bg-red-100 text-red-800 px-1 rounded">cd backend && python app.py</code>
+          </p>
+        </div>
+      )}
+
       {/* Main Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Grid Visualization - Takes up more space */}
-        <div className="lg:col-span-2">
+      <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 xl:gap-6 max-h-[calc(100vh-120px)]">
+        {/* Grid Visualization */}
+        <div className="xl:col-span-2">
           <GridVisualization
             gridState={gridState}
             editable={!initialized}
@@ -53,8 +86,8 @@ const Index = () => {
           />
         </div>
 
-        {/* Right Panel - Stats & Controls */}
-        <div className="space-y-6">
+        {/* Statistics Panel */}
+        <div className="xl:max-h-full xl:overflow-y-auto">
           <StatisticsPanel
             connectionStatus={connectionStatus}
             trainingState={trainingState}
@@ -64,7 +97,10 @@ const Index = () => {
             avgSteps={avgSteps}
             episodeHistory={episodeHistory}
           />
-          
+        </div>
+
+        {/* Controls & Configuration Panel */}
+        <div className="space-y-4 xl:max-h-full xl:overflow-y-auto">
           <ControlsPanel
             trainingState={trainingState}
             initialized={initialized}
@@ -74,20 +110,17 @@ const Index = () => {
             onExecuteAction={executeAction}
             onReset={reset}
           />
+          
+          <ConfigurationPanel
+            gridSize={gridState.gridSize}
+            obstacleCount={gridState.obstacles.length}
+            agentParams={agentParams}
+            initialized={initialized}
+            onGridSizeChange={setGridSize}
+            onInitialize={handleInitialize}
+            onAgentParamsChange={updateAgentParams}
+          />
         </div>
-      </div>
-
-      {/* Configuration Panel - Bottom */}
-      <div className="mt-6">
-        <ConfigurationPanel
-          gridSize={gridState.gridSize}
-          obstacleCount={gridState.obstacles.length}
-          agentParams={agentParams}
-          initialized={initialized}
-          onGridSizeChange={setGridSize}
-          onInitialize={handleInitialize}
-          onAgentParamsChange={updateAgentParams}
-        />
       </div>
     </div>
   );

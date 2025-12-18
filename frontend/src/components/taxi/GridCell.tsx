@@ -27,7 +27,7 @@ export function GridCell({
     <div
       onClick={onClick}
       className={cn(
-        'relative w-20 h-20 border border-border flex items-center justify-center transition-all duration-200',
+        'relative w-16 h-16 border border-border flex items-center justify-center transition-all duration-200',
         isObstacle 
           ? 'bg-muted-foreground/20 pattern-brick' 
           : 'bg-card hover:bg-accent/50',
@@ -36,25 +36,25 @@ export function GridCell({
       )}
     >
       {/* Coordinate label */}
-      <span className="absolute bottom-1 right-1 text-[10px] text-muted-foreground font-mono">
+      <span className="absolute bottom-0.5 right-0.5 text-[8px] text-muted-foreground font-mono">
         {x},{y}
       </span>
 
       {/* Obstacle */}
       {isObstacle && (
-        <div className="text-3xl opacity-60">🧱</div>
+        <div className="text-2xl opacity-60">🧱</div>
       )}
 
       {/* Destination marker (show under taxi if overlapping) */}
       {isDestination && !isObstacle && (
-        <div className={cn('text-3xl', isTaxi && 'absolute opacity-50')}>
+        <div className={cn('text-2xl', isTaxi && 'absolute opacity-50')}>
           📍
         </div>
       )}
 
       {/* Passenger waiting */}
       {isPassenger && !isObstacle && (
-        <div className={cn('text-3xl', isTaxi && 'absolute opacity-50')}>
+        <div className={cn('text-2xl', isTaxi && 'absolute opacity-50')}>
           🧑
         </div>
       )}
@@ -62,7 +62,7 @@ export function GridCell({
       {/* Taxi */}
       {isTaxi && !isObstacle && (
         <div className={cn(
-          'text-4xl transition-transform duration-300',
+          'text-3xl transition-transform duration-300',
           hasPassengerInTaxi && 'scale-110'
         )}>
           {hasPassengerInTaxi ? '🚖' : '🚕'}

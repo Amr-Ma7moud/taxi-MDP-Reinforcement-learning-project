@@ -12,8 +12,8 @@ import threading
 import time
 from typing import Optional, Dict, Any
 
-from .environment import Environment
-from .agent import Agent
+from environment import Environment
+from agent import Agent
 
 
 # Flask app setup

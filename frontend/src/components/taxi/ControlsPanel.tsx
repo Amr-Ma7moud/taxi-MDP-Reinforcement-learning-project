@@ -32,11 +32,11 @@ export function ControlsPanel({
   const { isTraining, speedMultiplier } = trainingState;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {/* Speed Control */}
       <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium">Speed</CardTitle>
+        <CardHeader className="pb-1 py-2">
+          <CardTitle className="text-xs font-medium">Speed</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex gap-2">
@@ -57,10 +57,10 @@ export function ControlsPanel({
 
       {/* Training Controls */}
       <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium">Training</CardTitle>
+        <CardHeader className="pb-1 py-2">
+          <CardTitle className="text-xs font-medium">Training</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3">
+        <CardContent className="space-y-2 py-2">
           <div className="space-y-1">
             <Label htmlFor="episodes" className="text-xs text-muted-foreground">
               Episodes (0 = infinite)
@@ -120,91 +120,6 @@ export function ControlsPanel({
         </CardContent>
       </Card>
 
-      {/* Manual Controls */}
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium">Manual Control</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {/* Direction Pad */}
-          <div className="flex flex-col items-center gap-1">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onExecuteAction('NORTH')}
-              disabled={!initialized || isTraining}
-              className="w-14"
-            >
-              <ArrowUp className="w-4 h-4" />
-            </Button>
-            <div className="flex gap-1">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => onExecuteAction('WEST')}
-                disabled={!initialized || isTraining}
-                className="w-14"
-              >
-                <ArrowLeft className="w-4 h-4" />
-              </Button>
-              <div className="w-14" />
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => onExecuteAction('EAST')}
-                disabled={!initialized || isTraining}
-                className="w-14"
-              >
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onExecuteAction('SOUTH')}
-              disabled={!initialized || isTraining}
-              className="w-14"
-            >
-              <ArrowDown className="w-4 h-4" />
-            </Button>
-          </div>
-
-          {/* Pickup / Drop */}
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onExecuteAction('PICKUP')}
-              disabled={!initialized || isTraining}
-              className="flex-1"
-            >
-              <Hand className="w-4 h-4 mr-1" />
-              Pick Up
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onExecuteAction('DROPOFF')}
-              disabled={!initialized || isTraining}
-              className="flex-1"
-            >
-              <Package className="w-4 h-4 mr-1" />
-              Drop Off
-            </Button>
-          </div>
-
-          {/* Agent Decide */}
-          <Button
-            variant="secondary"
-            onClick={() => onExecuteAction('NORTH')} // Will be 'auto' with socket
-            disabled={!initialized || isTraining}
-            className="w-full"
-          >
-            <Bot className="w-4 h-4 mr-1" />
-            Let Agent Decide
-          </Button>
-        </CardContent>
-      </Card>
     </div>
   );
 }

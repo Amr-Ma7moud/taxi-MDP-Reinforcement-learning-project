@@ -4,7 +4,13 @@ Entry point for the Taxi MDP Backend Server.
 Run with: python app.py
 """
 
-from src.server import app, socketio
+import sys
+import os
+
+# Add src directory to Python path
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+
+from server import app, socketio
 
 if __name__ == "__main__":
     print("=" * 60)
